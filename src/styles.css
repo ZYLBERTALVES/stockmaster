@@ -348,7 +348,7 @@ th, .table-empty, .saldo-produto, .metric-card p, .grafico-descricao {
 }
 
 @media (max-width: 768px) {
-    .container, .sidebar nav {
+    .container {
         flex-direction: column;
     }
 

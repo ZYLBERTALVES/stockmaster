@@ -2,7 +2,7 @@ function Historico({ movimentacoes, produtos }) {
   const movimentacoesRecentes = [...movimentacoes].reverse();
 
   return (
-    <section className="tab-content active" aria-labelledby="titulo-historico">
+    <section aria-labelledby="titulo-historico">
       <div className="card">
         <div className="card-header">
           <h2 id="titulo-historico">

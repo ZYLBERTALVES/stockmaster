@@ -5,8 +5,8 @@ function Estoque({ produtos, categorias, excluirProduto }) {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('todos');
 
   // Filtra os produtos por nome, código e categoria.
+  const termoBusca = busca.trim().toLowerCase();
   const produtosFiltrados = produtos.filter((produto) => {
-    const termoBusca = busca.trim().toLowerCase();
     const correspondeBusca = produto.nome.toLowerCase().includes(termoBusca)
       || produto.codigo.toLowerCase().includes(termoBusca);
     const correspondeCategoria = categoriaSelecionada === 'todos'
@@ -16,7 +16,7 @@ function Estoque({ produtos, categorias, excluirProduto }) {
   });
 
   return (
-    <section className="tab-content active" aria-labelledby="titulo-estoque">
+    <section aria-labelledby="titulo-estoque">
       <div className="card">
         <div className="card-header">
           <h2 id="titulo-estoque">
@@ -37,7 +37,7 @@ function Estoque({ produtos, categorias, excluirProduto }) {
             <label htmlFor="filtro-categoria" className="sr-only">Filtrar por categoria</label>
             <select
               id="filtro-categoria"
-              className="form-select select-compact"
+              className="select-compact"
               value={categoriaSelecionada}
               onChange={(evento) => setCategoriaSelecionada(evento.target.value)}
             >
@@ -77,16 +77,13 @@ function Estoque({ produtos, categorias, excluirProduto }) {
               {produtosFiltrados.map((produto) => {
                 let status = 'Normal';
                 let classeStatus = 'badge-success';
-                let classeLinha = '';
 
                 if (produto.quantidade === 0) {
                   status = 'Zerado';
                   classeStatus = 'badge-danger';
-                  classeLinha = 'row-alert-danger';
                 } else if (produto.quantidade <= produto.estoqueMinimo) {
                   status = 'Estoque Baixo';
                   classeStatus = 'badge-warning';
-                  classeLinha = 'row-alert-warning';
                 }
 
                 const precoFormatado = produto.preco.toLocaleString('pt-BR', {
@@ -95,7 +92,7 @@ function Estoque({ produtos, categorias, excluirProduto }) {
                 });
 
                 return (
-                  <tr key={produto.id} className={classeLinha}>
+                  <tr key={produto.id}>
                     <td>{produto.nome}</td>
                     <td><code>{produto.codigo}</code></td>
                     <td>{produto.categoria}</td>
@@ -106,7 +103,7 @@ function Estoque({ produtos, categorias, excluirProduto }) {
                     <td>
                       <button
                         type="button"
-                        className="btn-icon delete"
+                        className="btn-icon"
                         aria-label={`Excluir ${produto.nome}`}
                         title="Excluir Produto"
                         onClick={() => excluirProduto(produto.id)}

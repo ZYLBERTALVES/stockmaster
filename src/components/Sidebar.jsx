@@ -30,7 +30,6 @@ function Sidebar({ abaAtual, setAbaAtual, tema, setTema }) {
         <label htmlFor="seletor-tema">Tema do Sistema</label>
         <select
           id="seletor-tema"
-          className="form-select"
           value={tema}
           onChange={(evento) => setTema(evento.target.value)}
         >
