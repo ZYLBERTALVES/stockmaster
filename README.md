@@ -20,7 +20,7 @@ A aplicação funciona no navegador, sem backend, banco de dados ou API externa.
 
 | Tela | Funcionamento |
 | --- | --- |
-| Dashboard | Mostra o total de produtos cadastrados, o valor do estoque, os alertas e um gráfico de pizza com a porcentagem de unidades de cada categoria. |
+| Dashboard | Mostra o total de produtos cadastrados, o valor do estoque, os alertas e um gráfico de barras com a porcentagem de unidades de cada categoria. |
 | Novo Produto | Cadastra nome, código, categoria, preço, quantidade inicial e estoque mínimo. |
 | Estoque | Lista os produtos, permite buscar por nome ou código, filtrar por categoria e excluir um produto. |
 | Movimentações | Registra entrada ou saída, com quantidade, data e observação, atualizando o estoque. |
@@ -38,7 +38,7 @@ A sidebar permite navegar entre as telas e escolher o tema claro ou escuro. O la
 - O status é **Zerado** quando a quantidade é zero, **Estoque Baixo** quando é positiva e menor ou igual ao mínimo, e **Normal** acima do mínimo.
 - O total de produtos representa o número de cadastros. O valor do estoque é a soma de `preco * quantidade` de cada produto.
 - O indicador de alertas inclui produtos com estoque baixo ou zerado.
-- O gráfico de pizza soma as unidades de cada categoria e calcula `quantidade da categoria / total de unidades * 100`. Os nomes e percentuais aparecem dentro das fatias, com texto branco e divisórias. Fatias menores que 8% usam etiquetas coloridas abaixo do gráfico para evitar sobreposição; ao passar o mouse sobre uma fatia, também é possível consultar sua categoria, percentual e quantidade. Todas as 10 categorias aparecem na legenda, inclusive as que estão com 0%. O gráfico acompanha cadastros, exclusões, entradas e saídas; quando o estoque está vazio, mostra uma mensagem em vez de fatias. Os percentuais são arredondados para uma casa decimal; participações positivas menores que 0,1% são indicadas como `< 0,1%`.
+- O gráfico de barras soma as unidades de cada categoria e calcula `quantidade da categoria / total de unidades * 100`. A porcentagem define a largura da barra no CSS. As 10 categorias aparecem com quantidade e percentual, inclusive as que estão com 0%. O gráfico acompanha cadastros, exclusões, entradas e saídas. Quando o estoque está vazio, mostra uma mensagem e barras zeradas. Os percentuais usam até uma casa decimal; participações positivas menores que 0,1% aparecem como `< 0,1%`.
 - Excluir um produto mantém suas movimentações no histórico. Os registros novos guardam o nome do produto para continuar identificados após a exclusão.
 
 ## Organização dos arquivos
@@ -172,9 +172,9 @@ Em um navegador sem dados anteriores, a aplicação começa com o estoque vazio.
 
 Foram verificados no Chrome os fluxos de cadastro, exclusão, entrada, saída, bloqueio de saldo insuficiente, busca por nome e código, filtro por categoria, dashboard e histórico. Também foram conferidos os códigos duplicados, valores inválidos e a persistência dos dados e do tema após atualizar a página.
 
-O gráfico também foi verificado no Chrome com estoque vazio, produtos com saldo zero, vários produtos na mesma categoria, categoria única, todas as 10 categorias e percentuais menores que 0,1%. Foram conferidos os recálculos após cadastro, exclusão, entrada e saída, a persistência após recarregar e o layout nos temas claro e escuro, em larguras de 320, 390, 768, 1101 e 1440 pixels.
+O gráfico de barras usa somas, porcentagens, `map` e largura em CSS. Foram verificados no Chrome os casos de estoque vazio, saldo zero, categoria única, soma de produtos da mesma categoria e percentual menor que 0,1%. As cinco telas foram verificadas sem transbordamento horizontal em larguras de 320, 390, 768 e 1440 pixels. Também foram conferidos o tema escuro, a persistência após recarregar e a preservação do histórico após excluir um produto. A verificação não registrou erros nem avisos no console, e `npm run build` concluiu com sucesso.
 
-Os testes não apresentaram erros ou avisos no console. A responsividade foi conferida em larguras de 320, 390 e 768 pixels. O comando `npm run build` concluiu com sucesso.
+Para verificar alterações, use o roteiro de demonstração acima, confira o layout em computador e celular e execute `npm run build`.
 
 ## Limites do projeto
 
