@@ -253,7 +253,27 @@ tbody tr:hover {
     background: var(--primary-soft);
 }
 
-th, .table-empty, .saldo-produto, .metric-card p, .descricao {
+th, .table-empty, .saldo-produto, .metric-card p, .lista-alertas {
+    list-style: none;
+}
+
+.lista-alertas li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+    overflow-wrap: anywhere;
+}
+
+.lista-alertas p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.descricao {
     color: var(--text-muted);
 }
 
@@ -344,7 +364,7 @@ th, .table-empty, .saldo-produto, .metric-card p, .descricao {
     background: rgba(245, 158, 11, 0.12);
 }
 
-.estoque-grafico {
+.estoque-grafico, .alertas-estoque {
     margin-top: 24px;
 }
 

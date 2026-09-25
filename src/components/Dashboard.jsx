@@ -45,6 +45,26 @@ function Dashboard() {
           </div>
         </div>
       </div>
+      <section className="card alertas-estoque" aria-labelledby="titulo-alertas">
+        <h2 id="titulo-alertas">Produtos em alerta</h2>
+        {produtosEmAlerta.length === 0 ? (
+          <p>Nenhum produto em alerta no momento.</p>
+        ) : (
+          <ul className="lista-alertas">
+            {produtosEmAlerta.map((produto) => (
+              <li key={produto.id}>
+                <div>
+                  <strong>{produto.nome}</strong>
+                  <p>{produto.codigo} · Disponível: {produto.quantidade} · Mínimo: {produto.estoqueMinimo}</p>
+                </div>
+                <span className={produto.quantidade === 0 ? 'badge-status badge-danger' : 'badge-status badge-warning'}>
+                  {produto.quantidade === 0 ? 'Zerado' : 'Estoque baixo'}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
       <GraficoEstoque produtos={produtos} categorias={categorias} />
     </section>
   );

@@ -20,7 +20,7 @@ A aplicação funciona no navegador, sem backend, banco de dados ou API externa.
 
 | Tela | Funcionamento |
 | --- | --- |
-| Dashboard | Mostra o total de produtos cadastrados, o valor do estoque, os alertas e um gráfico de barras com a porcentagem de unidades de cada categoria. |
+| Dashboard | Mostra o total de produtos cadastrados, o valor do estoque, uma lista dos produtos em alerta e um gráfico de barras com a porcentagem de unidades de cada categoria. |
 | Novo Produto | Cadastra nome, código, categoria, preço, quantidade inicial e estoque mínimo. |
 | Estoque | Lista os produtos, permite buscar por nome ou código, filtrar por categoria e excluir um produto. |
 | Movimentações | Registra entrada ou saída, com quantidade, data e observação, atualizando o estoque. |
@@ -37,7 +37,7 @@ A sidebar permite navegar entre as telas e escolher o tema claro ou escuro. O la
 - Uma saída maior que o saldo disponível é recusada, sem alterar o estoque ou o histórico.
 - O status é **Zerado** quando a quantidade é zero, **Estoque Baixo** quando é positiva e menor ou igual ao mínimo, e **Normal** acima do mínimo.
 - O total de produtos representa o número de cadastros. O valor do estoque é a soma de `preco * quantidade` de cada produto.
-- O indicador de alertas inclui produtos com estoque baixo ou zerado.
+- O indicador de alertas inclui produtos com estoque baixo ou zerado. Logo abaixo, o dashboard lista nome, código, quantidade disponível, estoque mínimo e status de cada produto em alerta. A lista acompanha as movimentações e exclusões; quando não há alertas, mostra uma mensagem.
 - O gráfico de barras soma as unidades de cada categoria e calcula `quantidade da categoria / total de unidades * 100`. A porcentagem define a largura da barra no CSS. As 10 categorias aparecem com quantidade e percentual, inclusive as que estão com 0%. O gráfico acompanha cadastros, exclusões, entradas e saídas. Quando o estoque está vazio, mostra uma mensagem e barras zeradas. Os percentuais usam até uma casa decimal; participações positivas menores que 0,1% aparecem como `< 0,1%`.
 - Excluir um produto mantém suas movimentações no histórico. Os registros novos guardam o nome do produto para continuar identificados após a exclusão.
 
