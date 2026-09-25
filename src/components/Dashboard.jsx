@@ -1,6 +1,8 @@
+import { useEstoque } from '../context/EstoqueContext';
 import GraficoEstoque from './GraficoEstoque';
 
-function Dashboard({ produtos, categorias }) {
+function Dashboard() {
+  const { produtos, categorias } = useEstoque();
   let valorTotal = 0;
 
   produtos.forEach((produto) => {

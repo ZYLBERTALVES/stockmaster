@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useEstoque } from '../context/EstoqueContext';
 
 function dataDeHoje() {
   const hoje = new Date();
@@ -8,7 +9,8 @@ function dataDeHoje() {
   return `${ano}-${mes}-${dia}`;
 }
 
-function Movimentacao({ produtos, registrarMovimentacao }) {
+function Movimentacao() {
+  const { produtos, registrarMovimentacao } = useEstoque();
   const [produtoId, setProdutoId] = useState('');
   const [tipo, setTipo] = useState('');
   const [quantidade, setQuantidade] = useState('');
@@ -19,7 +21,7 @@ function Movimentacao({ produtos, registrarMovimentacao }) {
 
   function enviarFormulario(evento) {
     evento.preventDefault();
-    // O App verifica o saldo, atualiza o produto e registra o histórico.
+    // O contexto verifica o saldo, atualiza o produto e registra o histórico.
     const erro = registrarMovimentacao({
       produtoId,
       tipo,

@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useEstoque } from '../context/EstoqueContext';
 
-function Estoque({ produtos, categorias, excluirProduto }) {
+function Estoque() {
+  const { produtos, categorias, excluirProduto } = useEstoque();
   const [busca, setBusca] = useState('');
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('todos');
 

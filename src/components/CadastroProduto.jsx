@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useEstoque } from '../context/EstoqueContext';
 
-function CadastroProduto({ categorias, adicionarProduto }) {
+function CadastroProduto() {
+  const { categorias, adicionarProduto } = useEstoque();
   // Cada estado guarda o valor de um campo do formulário.
   const [nome, setNome] = useState('');
   const [codigo, setCodigo] = useState('');
@@ -12,7 +14,7 @@ function CadastroProduto({ categorias, adicionarProduto }) {
 
   function enviarFormulario(evento) {
     evento.preventDefault();
-    // A função recebida do App valida os dados e adiciona o produto.
+    // A função do contexto valida os dados e adiciona o produto.
     const erro = adicionarProduto({
       nome,
       codigo,

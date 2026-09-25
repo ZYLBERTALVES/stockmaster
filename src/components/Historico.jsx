@@ -1,4 +1,7 @@
-function Historico({ movimentacoes, produtos }) {
+import { useEstoque } from '../context/EstoqueContext';
+
+function Historico() {
+  const { movimentacoes, produtos } = useEstoque();
   const movimentacoesRecentes = [...movimentacoes].reverse();
 
   return (

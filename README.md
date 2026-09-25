@@ -8,7 +8,7 @@ O projeto partiu de uma versão em HTML, CSS e JavaScript puro. Na versão atual
 
 ## Tecnologias utilizadas
 
-- **React e JavaScript:** componentes, estados, props e eventos.
+- **React e JavaScript:** componentes, estados, props, eventos, Context API e hook personalizado.
 - **Vite:** servidor de desenvolvimento e geração do build.
 - **CSS puro:** cores, espaçamentos, formulários, tabelas e responsividade.
 - **localStorage:** armazenamento dos dados no navegador.
@@ -56,6 +56,8 @@ stockmaster/
     ├── main.jsx
     ├── App.jsx
     ├── styles.css
+    ├── context/
+    │   └── EstoqueContext.jsx
     └── components/
         ├── Sidebar.jsx
         ├── Dashboard.jsx
@@ -66,7 +68,7 @@ stockmaster/
         └── Historico.jsx
 ```
 
-`main.jsx` inicia o React e importa os estilos. `App.jsx` concentra os dados compartilhados, a navegação e as funções `adicionarProduto`, `excluirProduto` e `registrarMovimentacao`. Cada componente da pasta `components` cuida da sua parte da interface.
+`main.jsx` inicia o React, importa os estilos e envolve a aplicação com `EstoqueProvider`. `App.jsx` cuida da navegação e do tema. `context/EstoqueContext.jsx` concentra os produtos, as movimentações, a persistência do estoque e as funções `adicionarProduto`, `excluirProduto` e `registrarMovimentacao`. Cada componente da pasta `components` cuida da sua parte da interface.
 
 `styles.css` reúne a apresentação visual, usando propriedades comuns de CSS, Flexbox, Grid e media queries. O arquivo `vite.config.js` configura o plugin React. As dependências e os comandos ficam em `package.json`; `package-lock.json` registra as versões instaladas.
 
@@ -74,20 +76,31 @@ stockmaster/
 
 ### Componentes e props
 
-A interface foi dividida em sete componentes separados. O `App` passa os dados e as funções por props, permitindo que diferentes telas utilizem a mesma lista de produtos.
+A interface foi dividida em sete componentes separados. Props continuam sendo usadas para informações recebidas diretamente de um componente pai: o `App` passa a navegação e o tema ao `Sidebar`, e o `Dashboard` passa produtos e categorias ao `GraficoEstoque`.
 
-Por exemplo, `Estoque` recebe `produtos`, `categorias` e `excluirProduto`. Quando o usuário clica na lixeira, o componente chama a função recebida. O `App` atualiza a lista, e o React exibe o resultado na interface.
+### Context API e hook personalizado
+
+`EstoqueContext` é criado com `createContext`. O componente `EstoqueProvider` guarda os dados com `useState` e os disponibiliza às telas por meio de `EstoqueContext.Provider`. A propriedade `children` representa os componentes envolvidos pelo provedor.
+
+O hook personalizado `useEstoque` usa `useContext` para acessar o contexto. Ele também mostra um erro claro se for chamado por um componente fora do provedor. Por exemplo, a tela de estoque lê:
+
+```jsx
+const { produtos, categorias, excluirProduto } = useEstoque();
+```
+
+Ao clicar na lixeira, a tela chama `excluirProduto`. O provedor atualiza a lista, e as telas que usam o contexto recebem os dados atualizados. Os estados dos campos, filtros e mensagens permanecem locais aos respectivos componentes. O contexto compartilha os dados; o localStorage preserva esses dados após recarregar a página.
 
 ### Estados com useState
 
 | Componente | Estados utilizados |
 | --- | --- |
-| App | `produtos`, `movimentacoes`, `abaAtual`, `tema` e `erroArmazenamento`. |
+| EstoqueProvider | `produtos`, `movimentacoes` e `erroArmazenamento`. |
+| App | `abaAtual`, `tema` e `erroTema`. |
 | CadastroProduto | `nome`, `codigo`, `categoria`, `preco`, `quantidade`, `estoqueMinimo` e `mensagem`. |
 | Estoque | `busca` e `categoriaSelecionada`. |
 | Movimentacao | `produtoId`, `tipo`, `quantidade`, `data`, `observacao` e `mensagem`. |
 
-`Sidebar`, `Dashboard`, `GraficoEstoque` e `Historico` recebem informações por props e não precisam de estados próprios. A aba exibida é escolhida pela renderização condicional no `App`.
+`Sidebar` e `GraficoEstoque` recebem informações por props. `Dashboard` e `Historico` acessam os dados pelo contexto. Esses quatro componentes não precisam de estados próprios. A aba exibida é escolhida pela renderização condicional no `App`.
 
 ### Formulários e eventos
 
@@ -118,7 +131,7 @@ Esse trecho preserva os demais campos e produtos, alterando apenas a quantidade 
 
 ### Persistência com useEffect e localStorage
 
-Na abertura da aplicação, os estados são inicializados com os dados do localStorage. O `useEffect` no `App` salva as informações quando `produtos`, `movimentacoes` ou `tema` mudam.
+Na abertura da aplicação, os estados são inicializados com os dados do localStorage. Um `useEffect` no `EstoqueProvider` salva produtos e movimentações quando essas listas mudam. Outro `useEffect`, no `App`, salva a preferência de tema. As mesmas chaves de armazenamento são mantidas, permitindo carregar os dados da versão anterior.
 
 | Chave | Informação armazenada |
 | --- | --- |
@@ -169,6 +182,8 @@ Em um navegador sem dados anteriores, a aplicação começa com o estoque vazio.
 9. Excluir o produto e observar a atualização do dashboard e a permanência dos registros no histórico.
 
 ## Verificações realizadas
+
+Após a introdução do contexto, foram conferidos no build de produção o compartilhamento dos dados entre as cinco telas, cadastro, filtros, movimentações, bloqueio de saldo insuficiente, histórico, gráfico e persistência. Também foram verificados o tema, o layout móvel e a exibição do aviso quando a gravação no localStorage falha, mantendo o uso dos dados em memória.
 
 Foram verificados no Chrome os fluxos de cadastro, exclusão, entrada, saída, bloqueio de saldo insuficiente, busca por nome e código, filtro por categoria, dashboard e histórico. Também foram conferidos os códigos duplicados, valores inválidos e a persistência dos dados e do tema após atualizar a página.
 
