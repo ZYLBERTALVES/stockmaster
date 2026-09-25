@@ -23,7 +23,7 @@ function GraficoEstoque({ produtos, categorias }) {
   return (
     <section className="card estoque-grafico" aria-labelledby="titulo-grafico">
       <h2 id="titulo-grafico">Estoque por categoria</h2>
-      <p className="grafico-descricao">Total de unidades em estoque: {totalUnidades}</p>
+      <p className="descricao">Total de unidades em estoque: {totalUnidades}</p>
       {totalUnidades === 0 && <p className="mensagem">Sem estoque. Cadastre um produto ou registre uma entrada.</p>}
       <ul className="grafico-barras">
         {resumo.map((item) => {

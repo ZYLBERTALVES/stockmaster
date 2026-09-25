@@ -20,7 +20,8 @@ function Dashboard() {
 
   return (
     <section aria-labelledby="titulo-dashboard">
-      <h2 id="titulo-dashboard" className="sr-only">Dashboard</h2>
+      <h2 id="titulo-dashboard">Visão geral do estoque</h2>
+      <p className="descricao">Acompanhe seus produtos, valores e itens que precisam de atenção.</p>
       <div className="metrics-grid">
         <div className="metric-card">
           <i className="fa-solid fa-box" aria-hidden="true"></i>

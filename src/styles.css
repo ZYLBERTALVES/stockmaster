@@ -1,11 +1,13 @@
 /* Cores compartilhadas; o tema escuro troca apenas estas variáveis. */
 :root {
-    --bg-primary: #f3f5fa;
+    --bg-primary: #f4f6fc;
     --bg-card: #ffffff;
     --text-main: #253047;
     --text-muted: #64748b;
     --primary: #4f46e5;
-    --border-color: #d8dee8;
+    --border-color: #e2e7f0;
+    --primary-soft: rgba(99, 102, 241, 0.09);
+    --shadow: 0 8px 24px rgba(30, 41, 59, 0.06);
     --success: #047857;
     --warning: #a16207;
     --danger: #b91c1c;
@@ -16,7 +18,10 @@
     --bg-card: #1e293b;
     --text-main: #f1f5f9;
     --text-muted: #b0bed0;
-    --border-color: #475569;
+    --primary: #a5b4fc;
+    --border-color: #334155;
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+    color-scheme: dark;
     --success: #6ee7b7;
     --warning: #fcd34d;
     --danger: #fca5a5;
@@ -49,13 +54,14 @@ body, button, input, select {
     flex-direction: column;
     gap: 28px;
     padding: 28px 18px;
-    background: #1e1b4b;
+    background: linear-gradient(160deg, #1e1b4b, #312e81);
     color: #eef2ff;
 }
 
 .brand h1 {
     font-size: 1.4rem;
-    color: #c7d2fe;
+    color: #eef2ff;
+    letter-spacing: -0.5px;
 }
 
 .sidebar nav {
@@ -67,7 +73,8 @@ body, button, input, select {
 button {
     cursor: pointer;
     border: 0;
-    border-radius: 8px;
+    border-radius: 10px;
+    transition: background-color 0.15s, box-shadow 0.15s;
 }
 
 .nav-btn {
@@ -75,6 +82,7 @@ button {
     background: transparent;
     color: inherit;
     text-align: left;
+    font-weight: 500;
 }
 
 .nav-btn i {
@@ -82,12 +90,18 @@ button {
 }
 
 .nav-btn:hover, .nav-btn.active, .btn-primary {
-    background: var(--primary);
+    background: linear-gradient(120deg, #4f46e5, #6d28d9);
     color: #fff;
+}
+
+.nav-btn.active {
+    box-shadow: inset 3px 0 #c4b5fd;
 }
 
 .sidebar-theme {
     margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .main-content {
@@ -102,12 +116,14 @@ button {
     padding: 24px;
     background: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
 }
 
 h2 {
     margin-bottom: 20px;
     font-size: 1.3rem;
+    letter-spacing: -0.4px;
 }
 
 /* Campos controlados pelos componentes React. */
@@ -122,6 +138,8 @@ h2 {
     flex-direction: column;
     gap: 8px;
     margin-bottom: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 
 .form-row .form-group {
@@ -135,12 +153,17 @@ h2 {
 input, select {
     width: 100%;
     min-width: 0;
-    min-height: 44px;
+    min-height: 46px;
     padding: 10px 12px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     background: var(--bg-card);
     color: var(--text-main);
+}
+
+input:focus, select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-soft);
 }
 
 input::placeholder {
@@ -156,6 +179,7 @@ button:focus-visible, input:focus-visible, select:focus-visible {
     width: 100%;
     padding: 12px;
     font-weight: 600;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
 }
 
 .btn-primary:hover {
@@ -205,6 +229,8 @@ button:disabled {
 
 .table-container {
     overflow-x: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
 }
 
 table {
@@ -219,7 +245,15 @@ th, td {
     font-size: 0.9rem;
 }
 
-th, .table-empty, .saldo-produto, .metric-card p, .grafico-descricao {
+th {
+    background: var(--bg-primary);
+}
+
+tbody tr:hover {
+    background: var(--primary-soft);
+}
+
+th, .table-empty, .saldo-produto, .metric-card p, .descricao {
     color: var(--text-muted);
 }
 
@@ -237,7 +271,8 @@ th, .table-empty, .saldo-produto, .metric-card p, .grafico-descricao {
 .badge-status {
     display: inline-block;
     padding: 4px 8px;
-    border-radius: 6px;
+    border-radius: 20px;
+    font-weight: 600;
     white-space: nowrap;
 }
 
@@ -282,26 +317,45 @@ th, .table-empty, .saldo-produto, .metric-card p, .grafico-descricao {
 }
 
 .metric-card h4 {
-    font-size: 1.7rem;
+    font-size: 1.8rem;
+    letter-spacing: -0.6px;
     overflow-wrap: anywhere;
 }
 
 .metric-card i {
     color: var(--primary);
-    font-size: 1.6rem;
+    font-size: 1.4rem;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: var(--primary-soft);
+}
+
+.metric-card:nth-child(2) i {
+    color: var(--success);
+    background: rgba(16, 185, 129, 0.12);
+}
+
+.metric-card:nth-child(3) i {
+    color: var(--warning);
+    background: rgba(245, 158, 11, 0.12);
 }
 
 .estoque-grafico {
     margin-top: 24px;
 }
 
-.grafico-descricao {
+.descricao {
     margin-bottom: 20px;
 }
 
 .grafico-barras {
     display: grid;
-    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 24px;
     list-style: none;
 }
 
@@ -316,6 +370,7 @@ th, .table-empty, .saldo-produto, .metric-card p, .grafico-descricao {
 
 .categoria {
     text-transform: capitalize;
+    font-weight: 600;
 }
 
 .barra-fundo {
@@ -327,7 +382,8 @@ th, .table-empty, .saldo-produto, .metric-card p, .grafico-descricao {
 
 .barra-valor {
     height: 100%;
-    background: var(--primary);
+    background: linear-gradient(90deg, #4f46e5, #818cf8);
+    border-radius: inherit;
 }
 
 /* Texto disponível para leitores de tela. */
@@ -371,7 +427,7 @@ th, .table-empty, .saldo-produto, .metric-card p, .grafico-descricao {
         padding: 16px;
     }
 
-    .form-row {
+    .form-row, .grafico-barras {
         grid-template-columns: 1fr;
     }
 
