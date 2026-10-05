@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StockMaster - Análise Técnica</title>
+<style>
+:root{--bg:#0e1629;--cd:#1e293b;--tx:#fff;--mu:#94a3b8;--c:#22d3ee;--b:#60a5fa;--g:#4ade80;--y:#fbbf24;--r:#f87171}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Noto Sans','Segoe UI',system-ui,sans-serif;overflow:hidden}
+#app{display:grid;grid-template-columns:36% 64%;height:100%}
+body.full #app{display:block}
+body.full #pane{height:100%}
+body.full #txt{display:none}
+#txt{padding:28px 24px 70px;overflow:auto;position:relative}
+.k{color:var(--c);font-weight:700;font-size:13px;letter-spacing:.5px;margin-bottom:10px}
+h1{font-size:clamp(24px,2.6vw,42px);line-height:1.15;margin-bottom:10px}
+.s{color:var(--mu);font-size:clamp(13px,1vw,16px);margin-bottom:18px}
+ul{margin:0 0 16px 4px;list-style:none}li{font-size:clamp(13px,1vw,16px);line-height:1.5;margin-bottom:8px}li:before{content:"• "}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:14px}
+.card{background:var(--cd);border-left:5px solid var(--c);border-radius:14px;padding:12px 14px}
+.card h3{font-size:clamp(14px,1.1vw,18px);margin-bottom:4px}.card p{color:var(--mu);font-size:clamp(12px,.9vw,14px);line-height:1.4}
+.card.go{cursor:pointer;transition:.15s}.card.go:hover{background:#2a3a55;transform:translateY(-2px)}
+.card.go:after{content:"↗ ver no app";display:block;color:var(--c);font-size:11px;margin-top:6px;font-weight:600}
+.b{border-color:var(--b)}.gr{border-color:var(--g)}.y{border-color:var(--y)}.r{border-color:var(--r)}
+.f{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 14px}.f div{background:var(--cd);border:1px solid var(--c);border-radius:12px;padding:8px 12px;text-align:center}
+.f b{display:block;font-size:14px}.f span{font-size:12px;color:#cbd5e1}
+.fl{color:var(--y);font-weight:700;font-size:12px;letter-spacing:.5px}
+.n{font-weight:700;font-size:clamp(13px,1vw,15px);line-height:1.4;margin-top:6px}
+#nav{position:absolute;left:0;bottom:0;width:36%;padding:12px 24px;display:flex;gap:8px;align-items:center;background:linear-gradient(transparent,var(--bg) 40%);z-index:5}
+body.full #nav{width:auto;left:16px;bottom:16px;background:none}
+button{background:#12243d;border:1px solid var(--c);color:var(--c);padding:7px 14px;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px}
+button:hover{background:#1b3556}#cnt{color:var(--mu);font-size:13px;margin:0 6px}
+#pane{display:flex;flex-direction:column;padding:12px 12px 12px 0;min-width:0}
+body.full #pane{padding:0}
+#bar{display:flex;gap:6px;align-items:center;padding:0 0 8px;flex-wrap:wrap}
+body.full #bar{position:absolute;top:8px;right:12px;z-index:6;padding:0}
+.tb{padding:5px 10px;font-size:12px}.tb.on{background:var(--c);color:#0e1629}
+#st{color:var(--mu);font-size:11px;margin-left:auto}
+#fr{flex:1;width:100%;border:2px solid var(--c);border-radius:12px;background:#fff}
+body.full #fr{border-radius:0;border:0}
+@media(max-width:800px){#app{grid-template-columns:1fr;grid-template-rows:45% 55%}#nav{width:100%}}
+</style></head><body>
+<div id="app">
+<div id="txt"></div>
+<div id="pane"><div id="bar"></div><iframe id="fr" title="StockMaster"></iframe></div>
+</div>
+<div id="nav"><button id="pv">←</button><span id="cnt"></span><button id="nx">→</button><button id="fs" title="Tecla F">⛶ Ampliar app</button></div>
+<script>
+const T={d:['Dashboard','dashboard'],n:['Novo Produto','novo produto'],e:['Estoque','estoque'],m:['Movimentações','moviment'],h:['Histórico','histor']};
+const S=[
+{t:'d',k:'STOCKMASTER',h:'Análise técnica da aplicação',s:'Frontend II • React • Arquitetura e decisões técnicas',c:[['','UI','7 componentes React'],['b','ESTADO','Context API + hooks'],['gr','DADOS','localStorage'],['y','BUILD','Vite + GitHub Pages']],n:'Objetivo: demonstrar fundamentos de Frontend II em uma SPA funcional de controle de estoque.'},
+{t:'n',k:'01 — ESCOPO',h:'O que foi construído',s:'Aplicação SPA para cadastro, consulta e movimentação de estoque — sem backend.',c:[['','Cadastro','Produto, código, categoria, preço, saldo inicial e mínimo.','n'],['b','Consulta','Busca por nome/código, filtro por categoria e exclusão.','e'],['gr','Movimentação','Entrada/saída com validação de saldo e registro histórico.','m'],['y','Dashboard','Indicadores, alertas de estoque e distribuição por categoria.','d'],['r','Persistência','Produtos, movimentações e tema preservados no navegador.'],['','Interface','Navegação por sidebar, tema claro/escuro e layout responsivo.','d']]},
+{t:'d',k:'02 — STACK',h:'Tecnologias e responsabilidades',s:'Cada tecnologia foi usada com uma responsabilidade definida na solução.',c:[['','React + JavaScript','Componentização, estados, eventos, renderização e regras da interface.'],['b','Context API','Estado compartilhado e operações centrais do estoque.'],['y','Vite','Ambiente de desenvolvimento e build de produção.'],['gr','CSS puro','Layout, responsividade, temas, tabelas e formulários.'],['r','localStorage','Persistência local de produtos, movimentações e tema.'],['','GitHub Actions / Pages','Build e publicação automática a partir da branch main.']]},
+{t:'d',k:'03 — ARQUITETURA',h:'Fluxo técnico da aplicação',s:'Separação entre inicialização, navegação, estado global, telas e persistência.',f:[['c','main.jsx','Bootstrap + Provider'],['b','App.jsx','Navegação + tema'],['g','Componentes','7 módulos de UI'],['y','EstoqueContext','Estado + regras'],['r','localStorage','Persistência']],c:[['','Estado local','Campos, filtros e mensagens permanecem dentro de cada tela.'],['y','Estado global','Produtos e movimentações são disponibilizados pelo EstoqueProvider.'],['gr','Atualização reativa','Mudanças no contexto atualizam automaticamente as telas consumidoras.']]},
+{t:'d',k:'04 — COMPONENTIZAÇÃO',h:'Responsabilidade por módulo',s:'A interface foi dividida para reduzir acoplamento e separar responsabilidades.',c:[['','Sidebar','Navegação + tema','d'],['b','Dashboard','KPIs + alertas','d'],['gr','GraficoEstoque','Distribuição por categoria','d'],['y','CadastroProduto','Entrada e validação de cadastro','n'],['r','Estoque','Busca, filtro e exclusão','e'],['','Movimentacao','Entrada/saída + regras','m'],['b','Historico','Auditoria das movimentações','h']],n:'App.jsx coordena a tela ativa; EstoqueContext.jsx concentra os dados e operações compartilhadas.'},
+{t:'m',k:'05 — ESTADO E DADOS',h:'Como uma operação percorre o sistema',s:'Exemplo: registro de uma saída de estoque.',c:[['','1 · Usuário envia formulário','Movimentacao.jsx'],['','2 · Validação','Quantidade > 0 e saldo suficiente'],['','3 · Regra central','registrarMovimentacao() no contexto'],['','4 · Atualização','Nova lista de produtos + histórico'],['','5 · Persistência','useEffect → localStorage'],['','6 · Renderização','Dashboard, Estoque e Histórico refletem o novo estado']]},
+{t:'n',k:'06 — REGRAS DE NEGÓCIO',h:'Validações implementadas',s:'Regras aplicadas antes de alterar o estado para manter consistência local.',l:['Código do produto deve ser único.','Preço, quantidade inicial e estoque mínimo não podem ser negativos.','Quantidades são inteiras; movimentação exige valor maior que zero.','Saída acima do saldo é recusada sem alterar estoque ou histórico.','Status: Zerado / Estoque Baixo / Normal conforme saldo e mínimo.','Exclusão remove o produto, mas preserva movimentações históricas.'],f:[['c','CONSISTÊNCIA','VALIDAR → ATUALIZAR ESTADO → PERSISTIR']]},
+{t:'e',k:'07 — PERSISTÊNCIA E DEPLOY',h:'Execução sem servidor de aplicação',s:'A solução atual é totalmente client-side.',c:[['gr','Persistência','JSON.stringify / JSON.parse em três chaves: produtos_salvos, movimentacoes_salvas e tema_selecionado.'],['y','Build','Vite gera a versão de produção na pasta dist.'],['','Automação','Workflow do GitHub Actions instala dependências, executa build e publica a branch main.'],['b','Hospedagem','GitHub Pages entrega os arquivos estáticos; base do Vite configurada para /stockmaster/.']]},
+{t:'h',k:'08 — QUALIDADE TÉCNICA',h:'Verificações realizadas',s:'Testes manuais e build de produção cobrem os fluxos principais.',c:[['','Fluxos','Cadastro, exclusão, entrada, saída, busca, filtro e histórico.'],['','Validações','Código duplicado, valores inválidos e saldo insuficiente.'],['','Persistência','Dados e tema mantidos após recarregar a página.'],['','Responsividade','Verificado em 320, 390, 768 e 1440 px.'],['gr','Build','npm run build concluído com sucesso.'],['gr','Console','Verificação registrada sem erros ou avisos.']],n:'Abordagem atual: validação manual. Próximo nível: testes automatizados unitários e de integração.'},
+{t:'e',k:'09 — LIMITAÇÕES E EVOLUÇÃO',h:'O que muda para um cenário corporativo',s:'O protótipo atende ao escopo acadêmico, mas não é uma arquitetura multiusuário.',c:[['r','Limitação atual','localStorage é isolado por navegador/origem; limpar dados remove o estoque.'],['r','Limitação atual','Sem autenticação, autorização, API, banco de dados ou sincronização entre usuários.'],['r','Limitação atual','Validações e regras existem apenas no cliente.']],fl:'EVOLUÇÃO TÉCNICA',f:[['y','API REST','Centralizar regras'],['y','Banco','Persistência compartilhada'],['y','Auth','Controle de acesso'],['y','Testes','Automação de qualidade']]},
+{t:'d',k:'10 — SÍNTESE',h:'Leitura técnica do StockMaster',c:[['','Arquitetura','SPA React componentizada com separação entre UI e estado compartilhado.'],['gr','Dados','Context API coordena o estado; localStorage garante persistência local.'],['y','Confiabilidade','Regras evitam inconsistências básicas nas operações de estoque.'],['b','Entrega','Vite + workflow automatizado + GitHub Pages formam o pipeline atual.']],n:'Conclusão técnica: solução adequada ao escopo de Frontend II e preparada para evoluir para uma arquitetura com API e banco de dados.'}];
+const $=s=>document.querySelector(s),fr=$('#fr'),CL={c:'',b:'b',g:'gr',y:'y',r:'r'};
+const N=x=>x.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+let i=0,cur='d',mode='x',B='https://zylbertalves.github.io/stockmaster/';
+function go(k){cur=k;document.querySelectorAll('.tb').forEach(b=>b.classList.toggle('on',b.dataset.t===k));
+ if(mode!=='s')return false;try{const d=fr.contentDocument,q=T[k][1];let e=[...d.querySelectorAll('button,a,[role=button]')];
+ let el=e.find(x=>N(x.textContent)===q)||e.find(x=>N(x.textContent).includes(q));
+ if(!el){e=[...d.querySelectorAll('li')];el=e.find(x=>N(x.textContent).includes(q))}
+ if(el){el.click();return true}}catch(x){}return false}
+function poll(){let n=0;const t=setInterval(()=>{if(go(cur)||++n>30)clearInterval(t)},300)}
+function show(n){i=Math.max(0,Math.min(S.length-1,n));const s=S[i];
+ $('#txt').innerHTML=`<div class=k>${s.k}</div><h1>${s.h}</h1>${s.s?`<p class=s>${s.s}</p>`:''}`+
+ (s.l?`<ul>${s.l.map(x=>`<li>${x}</li>`).join('')}</ul>`:'')+
+ (s.c?`<div class=g>${s.c.map(c=>`<div class="card ${CL[c[0]]||c[0]} ${c[3]?'go':''}" data-t="${c[3]||''}"><h3>${c[1]}</h3><p>${c[2]}</p></div>`).join('')}</div>`:'')+
+ (s.fl?`<div class=fl>${s.fl}</div>`:'')+
+ (s.f?`<div class=f>${s.f.map(c=>`<div style="border-color:var(--${c[0]})"><b style="color:var(--${c[0]})">${c[1]}</b><span>${c[2]}</span></div>`).join('')}</div>`:'')+
+ (s.n?`<p class=n>${s.n}</p>`:'');
+ $('#txt').scrollTop=0;$('#cnt').textContent=(i+1)+' / '+S.length;go(s.t);setTimeout(()=>go(s.t),400)}
+$('#txt').onclick=e=>{const c=e.target.closest('.go');if(c)go(c.dataset.t)};
+$('#bar').innerHTML=Object.keys(T).map(k=>`<button class=tb data-t=${k}>${T[k][0]}</button>`).join('')+'<span id=st></span>';
+$('#bar').onclick=e=>{const b=e.target.closest('.tb');if(b)go(b.dataset.t)};
+const fs=()=>document.body.classList.toggle('full');
+$('#pv').onclick=()=>show(i-1);$('#nx').onclick=()=>show(i+1);$('#fs').onclick=fs;
+function key(e){if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
+ if(e.key==='ArrowRight'||e.key==='PageDown')show(i+1);else if(e.key==='ArrowLeft'||e.key==='PageUp')show(i-1);
+ else if(e.key==='f'||e.key==='F')fs();else if(e.key==='Escape')document.body.classList.remove('full')}
+document.addEventListener('keydown',key);
+function status(){$('#st').textContent=mode==='s'?'● slides controlam o app':'modo manual: clique no menu do app'}
+fr.onload=()=>{if(mode==='s'){try{fr.contentDocument.addEventListener('keydown',key);poll()}catch(e){mode='x'}}status()};
+async function load(){try{const h=await(await fetch(B,{cache:'no-store'})).text();mode='s';
+ fr.srcdoc=h.replace(/<head[^>]*>/i,m=>m+'<base href="'+B+'">');
+ setTimeout(()=>{try{const r=fr.contentDocument.querySelector('#root');if(r&&!r.children.length){mode='x';fr.removeAttribute('srcdoc');fr.src=B}}catch(e){}},9000)}
+ catch(e){mode='x';fr.src=B;status()}}
+show(0);load();
+</script></body></html>
